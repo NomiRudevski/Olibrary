@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLibrary</title>
+    <link rel="icon" type="image/x-icon" href="http://127.0.0.1:5000/static/icon/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body class="background">
+    <nav class="nav-container">
+        <div class="main-title">OLibrary</div>
+        <ul class="navbar">
+            <li class="nav-item"><a class="nav-link" href="books.html">All Books</a></li>
+            <li class="nav-item"><a class="nav-link" href="loans.html">My Loans</a></li>
+        </ul>
+        <div class="dropdown-icon" onclick="toggleMenu()">&#9776;</div>
+        <div class="dropdown" id="dropdownMenu">
+            <li class="nav-item"><a class="nav-link" href="books.html">All Books</a></li>
+            <li class="nav-item"><a class="nav-link" href="loans.html">My Loans</a></li>
+        </div>
+    </nav>
+    <button id="adminLoans" class="b-default" onclick="goToDashboard()" style="display:none; position:fixed; bottom:20px; right:20px; width: 85px;">Dashboard</button>
+
+    <div class="all-books" id="loanList"></div>
+
+    <div class="modal-container" id="bookCardModal">
+        <div id="loanCard" class="bookMoal">
+            <div id = "loanimageCard"></div>
+            <div id = "loanTitle" class="card-main-text"></div>
+            <div id = "loanAuthor"></div>
+            <div id = "loanCategory"></div>
+            <div id = "loanDescription"></div>
+            <button id = "loanBookCardButton" class="b-default">Loan Book</button>
+            <button onclick="closeModal('bookCardModal')" class="b-default">Close</button>
+            <div id = "loanError"></div>
+        </div>
+    </div>
+
+    <script>
+        getAllLoans()
+        checkAdminStatus('adminLoans');
+    </script>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLibrary</title>
+    <link rel="icon" type="image/x-icon" href="http://127.0.0.1:5000/static/icon/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body class="background">
+    <nav class="nav-container">
+        <div class="main-title">OLibrary</div>
+        <ul class="navbar">
+            <li class="nav-item"><a class="nav-link" href="books.html">All Books</a></li>
+            <li class="nav-item"><a class="nav-link" href="loans.html">My Loans</a></li>
+        </ul>
+        <div class="dropdown-icon" onclick="toggleMenu()">&#9776;</div>
+        <div class="dropdown" id="dropdownMenu">
+            <li class="nav-item"><a class="nav-link" href="books.html">All Books</a></li>
+            <li class="nav-item"><a class="nav-link" href="loans.html">My Loans</a></li>
+        </div>
+    </nav>
+
+    <nav class="sub-nav-container">
+        <ul class="sub-navbar">
+            <li class="sub-nav-item">
+                <div id="booksNav" class="sub-nav-link" onclick="showBooksDashboard()"
+                    style="background-color: #271956">Books</div>
+            </li>
+            <li class="sub-nav-item">
+                <div id="usersNav" class="sub-nav-link" onclick="showUsersDashboard()">Users</div>
+            </li>
+            <li class="sub-nav-item">
+                <div id="loansNav" class="sub-nav-link" onclick="showLoansDashboard()">Loans</div>
+            </li>
+        </ul>
+    </nav>
+
+    <button id="regularWebsiteButton" class="b-default" onclick="goToRegularWebsite()" style="display:none; position:fixed; bottom:20px; right:20px; width: 85px;" >Regular Website</button>
+
+    <div id="books" class="dash" style="visibility: visible;">
+        <form onsubmit="addBook(event)" class="add-book-container">
+            <input id="title" placeholder="Enter title" class="form-input" required>
+            <input id="author" placeholder="Enter author" class="form-input" required>
+            <input id="description" placeholder="Enter description" class="form-input" maxlength="250" required>
+            <input id="category" placeholder="Enter category" class="form-input" required>
+            <select id="loan_type" class="form-input" required>
+                <option value="" disabled selected>Select loan duration type</option>
+                <option value=5>A - 5 days</option>
+                <option value=7>B - 7 days</option>
+                <option value=10>C - 10 days</option>
+            </select>
+            <label id="fileLabel" for="file" class="custom-file-upload">Upload image</label>
+            <input id="file" type="file" accept="image/*" required style="display: none;">
+            <div class="error-message" id="addBookError"></div>
+            <button type="submit" class="b-default" style="margin-top: 20px;">Add new book</button>
+        </form>
+
+        <table id="bookList" class="table" cellspacing="0" cellpadding="0">
+            <tr class="tr">
+                <th class="th">Title</th>
+                <th class="th">Author</th>
+                <th class="th">Loan type</th>
+                <th class="th">Loand</th>
+                <th class="th">Edit</th>
+            </tr>
+        </table>
+
+        <div id="delete-modal-container" class="modal-container">
+            <div id="delete-modal" class="modal">
+                <span class="card-main-text">Are you sure you want to delete this book?</span>
+                <button id="delete-button-modal" class="b-default">Delete</button>
+                <button class="b-default" onclick="closeModal('delete-modal-container')">No, don't delete</button>
+                <div class="error-message" id="dlt-errorMassege"></div>
+            </div>
+        </div>
+
+        <div id="update-modal-container" class="modal-container">
+            <div id="update-modal" class="modal">
+                <span>
+                    Please only fill in the fields that need to be updated
+                </span>
+                <form id="updForm" onsubmit="updateBook(event, 0)" class="add-book-container">
+                    <input id="upd-title" placeholder="Update title" class="form-input">
+                    <input id="upd-author" placeholder="Update author" class="form-input">
+                    <input id="upd-description" placeholder="Update description" class="form-input">
+                    <input id="upd-category" placeholder="Update category" class="form-input">
+                    <select id="upd-loan_type" class="form-input">
+                        <option value="" disabled selected>Update loan duration type</option>
+                        <option value=5>A - 5 days</option>
+                        <option value=7>B - 7 days</option>
+                        <option value=10>C - 10 days</option>
+                    </select>
+                    <label id="upd-fileLabel" for="upd-file" class="custom-file-upload">Upload image to update</label>
+                    <input id="upd-file" type="file" accept="image/*" style="display: none;">
+                    <button type="submit" class="b-default">Update book</button>
+                    <button type="button" class="b-default"
+                        onclick="closeModal('update-modal-container')">Close</button>
+                </form>
+                <div class="error-message" id="upd-errorMassege"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div id="users" class="dash" style="visibility: hidden;">
+        <form onsubmit="addUser(event)" class="add-usr-container">
+            <input id="username" placeholder="Enter user name" class="form-input" required>
+            <input type="email" id="userEmail" placeholder="Enter user email" class="form-input" required>
+            <input id="password" placeholder="Enter default password" class="form-input" required>
+            <div class="error-message" id="addUserError"></div>
+            <button type="submit" class="b-default" style="margin-top: 20px;">Add new user</button>
+        </form>
+
+        <table id="userlist" class="table" cellspacing="0" cellpadding="0">
+            <tr class="tr">
+                <th class="th">User name</th>
+                <th class="th">User Email</th>
+                <th class="th">Premission level</th>
+                <th class="th">Edit</th>
+            </tr>
+        </table>
+
+        <div id="delete-user-container" class="modal-container">
+            <div id="dlt-user-modal" class="modal">
+                <span class="card-main-text">Are you sure you want to delete this user?</span>
+                <button id="dltButtonUser" class="b-default">Delete</button>
+                <button class="b-default" onclick="closeModal('delete-user-container')">No, don't delete</button>
+                <div class="error-message" id="dltUsrError"></div>
+            </div>
+        </div>
+
+        <div id="updUserContainer" class="modal-container">
+            <div id="usrUpd" class="modal">
+                <span>
+                    Please only fill in the fields that need to be updated
+                </span>
+                <form id="updUsrForm" onsubmit="updateUser(event, 0)" class="add-user-container">
+                    <input id="updUserName" placeholder="Update user name" class="form-input">
+                    <input type="email" id="updUserEmail" placeholder="Update user email" class="form-input">
+                    <input id="updUserPassword" placeholder="Update user password" class="form-input">
+                    <select id="updUserLvl" class="form-input">
+                        <option value="" selected>Select user permission level</option>
+                        <option value="A">Admin</option>
+                        <option value="U">Regular user</option>
+                    </select>
+                    <button type="submit" class="b-default">Update user</button>
+                    <button type="button" class="b-default" onclick="closeModal('updUserContainer')">Close</button>
+                </form>
+                <div class="error-message" id="updUsrError"></div>
+            </div>
+        </div>
+    </div>
+
+<div id="loans" class="dash" style="visibility: hidden;">
+    <table id = "loanlist" class="table" cellspacing="0" cellpadding="0" style="margin-top: 15px;">
+        <tr class="tr">
+            <th class="th">User name</th>
+            <th class="th">Book title</th>
+            <th class="th">Loan date</th>
+            <th class="th">Due date</th>
+            <th class="th">Is late</th>
+            <th class="th">Return book</th>
+            <th class="th">Extend loan</th>
+        </tr>
+    </table>
+    
+    <div id="extendLoanContainer" class="modal-container">
+        <div id = "extendLoanModal" class="modal">
+            <span class="card-main-text">Are you sure you want to extend the loan period?</span>
+            <button id="extendLoanBtn" class="b-default">Extend</button>
+            <button class="b-default" onclick="closeModal('extendLoanContainer')">No, don't extend</button>
+            <div class="error-message" id="extendError"></div>
+        </div>
+    </div>
+
+    <div id="returnLoanContainer" class="modal-container">
+        <div id = "returnLoanModal" class="modal">
+            <span class="card-main-text">Are you sure you want to mark the book as returned?</span>
+            <button id="returnLoanBtn" class="b-default">Return</button>
+            <button class="b-default" onclick="closeModal('returnLoanContainer')">No, don't return</button>
+            <div class="error-message" id="returnError"></div>
+        </div>
+    </div>
+
+</div>
+
+    <script>
+        adminBookList()
+        adminUserList()
+        adminLoanList()
+        checkAdminStatus('regularWebsiteButton');
+    </script>
