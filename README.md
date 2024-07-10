@@ -1,5 +1,9 @@
 # OLibrary
+-admin user
+-um: admin
+-psw: admin
 
+https://nomirudevski.github.io/Olibrary-frontend/
 OLibrary is a library management system built using Flask for the backend and JavaScript with Axios for the frontend. This system allows users to manage books, users, and loans efficiently. It includes features for adding, updating, and deleting books and users, as well as managing book loans and returns.
 
 ## Features
