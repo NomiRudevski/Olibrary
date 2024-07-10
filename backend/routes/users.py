@@ -45,6 +45,7 @@ def add_user():
     return jsonify({'error':'Forbidden'}), 403
 
 
+#cheking if the field has data to allow updating just someq one of the things
 @users_bp.route("/update-user/<int:user_id>", methods = ['PUT'])
 def update_user(user_id):
     user = check_user()

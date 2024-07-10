@@ -51,7 +51,7 @@ def get_user_loans():
     return jsonify(loans), 200
 
 
-
+#loaning book- gets user from cookie, username is uniq
 @loans_bp.route("/create-loan", methods = ['POST'])
 def create_loan():
     data = request.get_json()
@@ -95,6 +95,7 @@ def deactivate_loan(loan_id):
     return jsonify({'massege': 'Book returned successfully'}), 200
 
 
+#option to extend not late loans
 @loans_bp.route("/extend-loan/<int:loan_id>")
 def extend_loan(loan_id):
     user = check_user()

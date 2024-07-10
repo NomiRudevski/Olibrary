@@ -10,7 +10,7 @@ SQL_Session = sessionmaker(bind=engine)
 SQL_session = SQL_Session()
 
 auth_bp = Blueprint('auth', __name__)
-
+ #route for regestering
 @auth_bp.route("/register", methods = ['POST'])
 def register():
     data = request.get_json()
@@ -19,11 +19,12 @@ def register():
         return jsonify({'error': 'Username already exists'}), 409
     hashed_password = bcrypt.hashpw(data['user_password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     new_user = User(user_name = data['user_name'], user_email = data['user_email'], user_password=hashed_password)
-    SQL_session.add(new_user)
+    SQL_session.add(new_user) 
     SQL_session.commit()
-    session["name"] = new_user.user_name
+    session["name"] = new_user.user_name #add cookie
     return jsonify(new_user.to_dict()), 201
 
+#route for logging in
 @auth_bp.route("/login", methods = ['POST'])
 def login():
     data = request.get_json()
@@ -32,7 +33,7 @@ def login():
         print("username")
         return jsonify({'error':'Log in details incorrect'}), 401
     if bcrypt.checkpw(data['user_password'].encode('utf-8'), user.user_password.encode('utf-8')) and user.active == True:
-        session["name"] = user.user_name
+        session["name"] = user.user_name #add cookie
         return jsonify({'message': 'Logged in successfully'}), 200
 
     return jsonify({'error': 'Log in details incorrect'}), 401
@@ -42,6 +43,7 @@ def logout():
     session["name"] = None
     return jsonify({'massege' : 'Loged out successfully'}), 200
 
+#rout to return if user is admin to the front end
 @auth_bp.route("/check-admin")
 def check_admin():
     user = SQL_session.query(User).filter(User.user_name == session.get("name")).first()
@@ -49,7 +51,7 @@ def check_admin():
         return jsonify({'user_permission' : True})
     return jsonify({'user_permission' : False})
 
-
+#checking route for testig correct user
 @auth_bp.route("/me")
 def me():
     if not session.get("name"):
@@ -61,6 +63,8 @@ def me():
 def images(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
+
+#internal backend functions to check for prmLvl/user
 def check_user():
     if not session.get("name"):
         return False

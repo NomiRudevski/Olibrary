@@ -13,19 +13,21 @@ session = Session()
 
 books_bp = Blueprint('books', __name__)
 
+#all active books(for admin)
 @books_bp.route("/all-books")
 def get_all_books():
     results = session.query(Book).filter(Book.active == True).all()
     books = [book.to_dict() for book in results]
     return jsonify(books)
 
-
+#rout for all un loaned active books
 @books_bp.route("/available-books")
 def get_available_books():
     results = session.query(Book).filter(Book.active == True, Book.is_loand == False).all()
     books = [book.to_dict() for book in results]
     return jsonify(books)
 
+#return spesific book
 @books_bp.route("/book/<int:book_id>")
 def get_book(book_id):
     book = session.query(Book).filter(Book.book_id == book_id, Book.active == True).first()
@@ -58,7 +60,7 @@ def add_book():
     
     return jsonify({'error':'Forbidden'}), 403
 
-    
+    #updating book, checks if ther is data to allow updading only some of the fields
 @books_bp.route("/update-book/<int:book_id>", methods= ['PUT'])
 def update_book(book_id):
     data = request.get_json()

@@ -18,7 +18,7 @@ Base.metadata.bind = engine
 # Configure session
 Session(app)
 
-# Optional: Configure upload folder
+# Configure upload folder
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'images')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
